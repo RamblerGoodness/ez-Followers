@@ -1,7 +1,8 @@
 {
   "id": "ez-followers-wfrp4e",
   "title": "EZ Followers: WFRP4e",
-  "version": "0.0.0",
+  "description": "Adds a Followers tab to WFRP4e character sheets.",
+  "version": "0.0.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
@@ -17,6 +18,9 @@
     "scripts/followers.js"
   ],
   "styles": [],
+  "url": "https://github.com/RamblerGoodness/ez-hirelings-and-henchmen-wfrp4e",
+  "manifest": "https://raw.githubusercontent.com/RamblerGoodness/ez-hirelings-and-henchmen-wfrp4e/main/module.json",
+  "download": "https://github.com/RamblerGoodness/ez-hirelings-and-henchmen-wfrp4e/archive/refs/heads/main.zip",
   "flags": {
     "canUpload": false
   },
@@ -28,6 +32,5 @@
         "compatibility": {}
       }
     ]
-  },
-  "description": "Working on this"
+  }
 }
