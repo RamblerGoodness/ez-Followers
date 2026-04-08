@@ -1,29 +1,36 @@
 {
-  "id": "ez-followers-wfrp4e",
-  "title": "EZ Followers: WFRP4e",
-  "description": "Adds a Followers tab to WFRP4e character sheets.",
-  "version": "0.0.1",
+  "id": "ez-followers",
+  "title": "EZ-Followers",
+  "version": "1.0.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
   },
   "authors": [
     {
-      "name": "RamblerGoodness",
+      "name": "Rambler",
       "discord": "Rambler",
       "flags": {}
     }
   ],
-  "esmodules": [
-    "scripts/ez-hirelings-and-henchmen-wfrp4e.js"
-  ],
-  "styles": [],
-  "url": "https://github.com/RamblerGoodness/ez-hirelings-and-henchmen-wfrp4e",
-  "manifest": "https://raw.githubusercontent.com/RamblerGoodness/ez-hirelings-and-henchmen-wfrp4e/main/module.json",
-  "download": "https://github.com/RamblerGoodness/ez-hirelings-and-henchmen-wfrp4e/archive/refs/heads/main.zip",
+  "url": "https://github.com/RamblerGoodness/ez-hirelings-and-henchmen-wfrp4e/tree/main",
   "flags": {
-    "canUpload": false
+    "canUpload": true
   },
+  "packs": [
+    {
+      "name": "pack-1",
+      "label": "EZ-Followers",
+      "path": "packs/pack-1",
+      "type": "JournalEntry",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "wfrp4e",
+      "flags": {}
+    }
+  ],
   "relationships": {
     "requires": [
       {
@@ -32,5 +39,6 @@
         "compatibility": {}
       }
     ]
-  }
+  },
+  "description": ""
 }
