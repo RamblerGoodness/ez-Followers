@@ -40,3 +40,9 @@ Hooks.on("renderActorSheet", (app, html) => {
     }
   }
 });
+
+console.log("EZ-Followers | script loaded");
+
+Hooks.on("renderActorSheet", (app, html) => {
+  console.log("EZ-Followers | renderActorSheet fired", app, html);
+});
