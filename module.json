@@ -6,6 +6,7 @@
     "minimum": "13",
     "verified": "13"
   },
+
   "authors": [
     {
       "name": "Rambler",
@@ -13,6 +14,11 @@
       "flags": {}
     }
   ],
+
+  "esmodules": [
+  "scripts/followers.js"
+  ],
+
   "url": "https://github.com/RamblerGoodness/ez-Followers/tree/main",
   "manifest": "https://raw.githubusercontent.com/RamblerGoodness/ez-Followers/main/module.json",
   "download": "https://github.com/RamblerGoodness/ez-Followers/archive/refs/heads/main.zip",
@@ -35,6 +41,7 @@
       "flags": {}
     }
   ],
+
   "relationships": {
     "requires": [
       {
@@ -44,5 +51,6 @@
       }
     ]
   },
-  "description": ""
+
+  "description": "Fisrt Module still learning."
 }
