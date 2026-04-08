@@ -1,4 +1,4 @@
-# EZ Hirelings and Henchmen: WFRP4e
+# EZ Followers: WFRP4e
 
 A small Foundry VTT module that adds a **Followers** tab to WFRP4e character sheets.
 

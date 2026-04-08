@@ -1,8 +1,8 @@
 {
-  "id": "ez-hirelings-and-henchmen-wfrp4e",
-  "title": "EZ Hirelings and Henchmen: WFRP4e",
+  "id": "ez-followers-wfrp4e",
+  "title": "EZ Followers: WFRP4e",
   "description": "Adds a Followers tab to WFRP4e character sheets.",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
