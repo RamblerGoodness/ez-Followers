@@ -1,0 +1,33 @@
+{
+  "id": "ez-followers-wfrp4e",
+  "title": "EZ Followers: WFRP4e",
+  "version": "0.0.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    {
+      "name": "RamblerGoodness",
+      "discord": "Rambler",
+      "flags": {}
+    }
+  ],
+  "esmodules": [
+    "scripts/followers.js"
+  ],
+  "styles": [],
+  "flags": {
+    "canUpload": false
+  },
+  "relationships": {
+    "requires": [
+      {
+        "id": "wfrp4e-core",
+        "type": "module",
+        "compatibility": {}
+      }
+    ]
+  },
+  "description": "Working on this"
+}
