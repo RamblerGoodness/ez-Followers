@@ -29,15 +29,12 @@
   
   "packs": [
     {
-      "name": "pack-1",
-      "label": "EZ-Followers",
-      "path": "packs/pack-1",
+      "name": "rules",
+      "label": "EZ-Followers Rules",
+      "path": "packs/rules.db",
       "type": "JournalEntry",
-      "ownership": {
-        "PLAYER": "OBSERVER",
-        "ASSISTANT": "OWNER"
-      },
       "system": "wfrp4e",
+      "private": true,
       "flags": {}
     }
   ],
@@ -52,5 +49,5 @@
     ]
   },
 
-  "description": "Fisrt Module still learning."
+  "description": "Adds a Followers tab to WFRP4e character sheets and includes a journal compendium with module notes and rules."
 }

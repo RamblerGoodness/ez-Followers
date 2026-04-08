@@ -1,0 +1,31 @@
+{
+  "name": "Follower Rules",
+  "pages": [
+    {
+      "_id": "EZFolRulesPage01",
+      "name": "Rules",
+      "type": "text",
+      "sort": 0,
+      "text": {
+        "content": "<h1>Follower Rules</h1><p>This journal outlines the intended use of the module while the Followers tab is being built out.</p><h2>Use Case</h2><ul><li>Track hirelings, retainers, servants, guards, and other non-primary companions tied to a character.</li><li>Keep follower information attached to the owning character instead of scattering notes across loose journals.</li></ul><h2>Planned Data</h2><ul><li>Name or label</li><li>Role or type</li><li>Headcount</li><li>Pay, upkeep, or notes</li></ul><h2>Current Limitations</h2><ul><li>The Followers tab is currently a placeholder view.</li><li>No add, edit, or delete controls are available yet.</li><li>No automated rules enforcement is applied at this stage.</li></ul><h2>Design Direction</h2><p>The module is intended to stay lightweight and sheet-focused: fast to open, easy to read, and simple to maintain during play.</p>",
+        "format": 1
+      }
+    }
+  ],
+  "flags": {},
+  "folder": null,
+  "ownership": {
+    "default": 0
+  },
+  "_stats": {
+    "systemId": "wfrp4e",
+    "systemVersion": "0.0.0",
+    "coreVersion": "13.0",
+    "createdTime": 0,
+    "modifiedTime": 0,
+    "lastModifiedBy": "system"
+  },
+  "_id": "EZFolRules0001",
+  "sort": 0,
+  "_key": "!journal!EZFolRules0001"
+}

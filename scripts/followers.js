@@ -4,6 +4,15 @@ const TAB_ID = "followers";
 const TAB_GROUP = "primary";
 const DEFAULT_ACTIVE_TAB = "main";
 
+Hooks.once("ready", () => {
+  registerFollowerTabFeatures();
+});
+
+// Placeholder area for future Followers tab behavior.
+function registerFollowerTabFeatures() {
+  // Add follower tab actions here once the rules and UI flow are finalized.
+}
+
 function log(...args) {
   console.log(`${MODULE_ID} |`, ...args);
 }
@@ -162,6 +171,7 @@ function patchPreparePartContext(Sheet) {
       };
 
       context.followers = this.document?.getFlag(MODULE_ID, "followers") ?? [];
+      context.followerTables = getFollowerTableContext(context.followers);
     }
 
     return context;
@@ -169,4 +179,11 @@ function patchPreparePartContext(Sheet) {
 
   Sheet.prototype._ezFollowersPreparePartContextPatched = true;
   log("_preparePartContext patched");
+}
+
+function getFollowerTableContext(followers) {
+  return {
+    hirelings: followers.filter(follower => follower?.category === "hireling"),
+    henchmen: followers.filter(follower => follower?.category === "henchman")
+  };
 }

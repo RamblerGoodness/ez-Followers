@@ -3,5 +3,65 @@
   data-group="{{tab.group}}"
   data-tab="{{tab.id}}"
 >
-  <div style="padding: 0.75rem;">Empty Followers Tab</div>
+  <div style="padding: 0.75rem; display: grid; gap: 1rem;">
+    <section>
+      <h3>Hirelings</h3>
+      <table class="table-hover" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: 0.35rem;">Name</th>
+            <th style="text-align: left; padding: 0.35rem;">Role</th>
+            <th style="text-align: left; padding: 0.35rem;">Count</th>
+            <th style="text-align: left; padding: 0.35rem;">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#if followerTables.hirelings.length}}
+            {{#each followerTables.hirelings}}
+              <tr>
+                <td style="padding: 0.35rem;">{{name}}</td>
+                <td style="padding: 0.35rem;">{{role}}</td>
+                <td style="padding: 0.35rem;">{{count}}</td>
+                <td style="padding: 0.35rem;">{{notes}}</td>
+              </tr>
+            {{/each}}
+          {{else}}
+            <tr>
+              <td colspan="4" style="padding: 0.5rem;">No hirelings added yet.</td>
+            </tr>
+          {{/if}}
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h3>Henchmen</h3>
+      <table class="table-hover" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align: left; padding: 0.35rem;">Name</th>
+            <th style="text-align: left; padding: 0.35rem;">Role</th>
+            <th style="text-align: left; padding: 0.35rem;">Count</th>
+            <th style="text-align: left; padding: 0.35rem;">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#if followerTables.henchmen.length}}
+            {{#each followerTables.henchmen}}
+              <tr>
+                <td style="padding: 0.35rem;">{{name}}</td>
+                <td style="padding: 0.35rem;">{{role}}</td>
+                <td style="padding: 0.35rem;">{{count}}</td>
+                <td style="padding: 0.35rem;">{{notes}}</td>
+              </tr>
+            {{/each}}
+          {{else}}
+            <tr>
+              <td colspan="4" style="padding: 0.5rem;">No henchmen added yet.</td>
+            </tr>
+          {{/if}}
+        </tbody>
+      </table>
+    </section>
+  </div>
 </section>
