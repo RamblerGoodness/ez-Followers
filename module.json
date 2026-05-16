@@ -1,10 +1,10 @@
 {
   "id": "ez-followers",
   "title": "EZ-Followers",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "compatibility": {
     "minimum": "13",
-    "verified": "13"
+    "verified": "14"
   },
 
   "authors": [
@@ -17,6 +17,10 @@
 
   "esmodules": [
   "scripts/followers.js"
+  ],
+
+  "styles": [
+    "styles/followers.css"
   ],
 
   "url": "https://github.com/RamblerGoodness/ez-Followers/tree/main",

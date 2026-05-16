@@ -1,67 +1,182 @@
 <section
-  class="tab {{#if tab.active}}active{{/if}}"
+  class="tab ez-followers-tab {{#if tab.active}}active{{/if}}"
   data-group="{{tab.group}}"
   data-tab="{{tab.id}}"
+  data-ez-leader-uuid="{{leaderUuid}}"
 >
-  <div style="padding: 0.75rem; display: grid; gap: 1rem;">
-    <section>
-      <h3>Hirelings</h3>
-      <table class="table-hover" style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th style="text-align: left; padding: 0.35rem;">Name</th>
-            <th style="text-align: left; padding: 0.35rem;">Role</th>
-            <th style="text-align: left; padding: 0.35rem;">Count</th>
-            <th style="text-align: left; padding: 0.35rem;">Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#if followerTables.hirelings.length}}
-            {{#each followerTables.hirelings}}
-              <tr>
-                <td style="padding: 0.35rem;">{{name}}</td>
-                <td style="padding: 0.35rem;">{{role}}</td>
-                <td style="padding: 0.35rem;">{{count}}</td>
-                <td style="padding: 0.35rem;">{{notes}}</td>
-              </tr>
-            {{/each}}
-          {{else}}
+  <div class="ez-followers-layout">
+    <section class="ez-followers-panel">
+      <header class="ez-followers-panel__header">
+        <h3>Henchmen</h3>
+        <span>Max {{fellowshipBonus}}</span>
+      </header>
+
+      <div class="ez-followers-drop-zone" data-ez-drop-category="henchman">
+        <table class="ez-followers-table">
+          <thead>
             <tr>
-              <td colspan="4" style="padding: 0.5rem;">No hirelings added yet.</td>
+              <th>Name</th>
+              <th>Type</th>
+              <th class="ez-followers-table__actions">Actions</th>
             </tr>
-          {{/if}}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {{#if followerTables.henchmen.length}}
+              {{#each followerTables.henchmen}}
+                <tr class="{{#if missing}}ez-followers-missing{{/if}}">
+                  <td>
+                    <div class="ez-followers-actor">
+                      <img src="{{img}}" alt="">
+                      <span>{{name}}</span>
+                    </div>
+                  </td>
+                  <td>{{actorType}}</td>
+                  <td class="ez-followers-table__actions">
+                    <button type="button" data-ez-remove-follower="{{id}}" title="Remove">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              {{/each}}
+            {{else}}
+              <tr>
+                <td colspan="3" class="ez-followers-empty">Drop character actors here.</td>
+              </tr>
+            {{/if}}
+          </tbody>
+        </table>
+      </div>
     </section>
 
-    <section>
-      <h3>Henchmen</h3>
-      <table class="table-hover" style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th style="text-align: left; padding: 0.35rem;">Name</th>
-            <th style="text-align: left; padding: 0.35rem;">Role</th>
-            <th style="text-align: left; padding: 0.35rem;">Count</th>
-            <th style="text-align: left; padding: 0.35rem;">Notes</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#if followerTables.henchmen.length}}
-            {{#each followerTables.henchmen}}
-              <tr>
-                <td style="padding: 0.35rem;">{{name}}</td>
-                <td style="padding: 0.35rem;">{{role}}</td>
-                <td style="padding: 0.35rem;">{{count}}</td>
-                <td style="padding: 0.35rem;">{{notes}}</td>
-              </tr>
+    <section class="ez-followers-panel">
+      <header class="ez-followers-panel__header">
+        <h3>Hirelings</h3>
+      </header>
+
+      <div class="ez-followers-drop-zone" data-ez-drop-category="hireling">
+        {{#if followerTables.hirelings.length}}
+          <div class="ez-hireling-list">
+            {{#each followerTables.hirelings}}
+              <article class="ez-hireling-card {{#if missing}}ez-followers-missing{{/if}}">
+                <header class="ez-hireling-card__header">
+                  <div class="ez-followers-actor">
+                    <img src="{{img}}" alt="">
+                    <span>{{name}}</span>
+                  </div>
+                  <button type="button" data-ez-remove-follower="{{id}}" title="Remove">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </header>
+
+                <div class="ez-hireling-fields">
+                  <label>
+                    <span>Profile</span>
+                    <select data-ez-hireling-id="{{id}}" data-ez-hireling-field="profile">
+                      <option value="{{profile}}" selected>{{profile}}</option>
+                      <option value="Doktor">Doktor</option>
+                      <option value="Lawyer">Lawyer</option>
+                      <option value="Local Scout">Local Scout</option>
+                      <option value="Porter">Porter</option>
+                      <option value="Scribe">Scribe</option>
+                      <option value="Seasoned Mercenary">Seasoned Mercenary</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Type</span>
+                    <select data-ez-hireling-id="{{id}}" data-ez-hireling-field="type">
+                      <option value="{{type}}" selected>{{type}}</option>
+                      <option value="Guide">Guide</option>
+                      <option value="Goon">Goon</option>
+                      <option value="Brain">Brain</option>
+                      <option value="Zealot">Zealot</option>
+                      <option value="Servant">Servant</option>
+                      <option value="Specialist">Specialist</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Contract</span>
+                    <select data-ez-hireling-id="{{id}}" data-ez-hireling-field="contract">
+                      <option value="{{contract}}" selected>{{contract}}</option>
+                      <option value="Task">Task</option>
+                      <option value="Ongoing">Ongoing</option>
+                      <option value="Weekly">Weekly</option>
+                      <option value="Until Complete">Until Complete</option>
+                      <option value="Until Dismissed">Until Dismissed</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Reliability</span>
+                    <select data-ez-hireling-id="{{id}}" data-ez-hireling-field="reliability">
+                      <option value="{{reliability}}" selected>{{reliability}}</option>
+                      <option value="Trusted">Trusted</option>
+                      <option value="Unknown">Unknown</option>
+                      <option value="Questionable">Questionable</option>
+                      <option value="Disloyal">Disloyal</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Status</span>
+                    <select data-ez-hireling-id="{{id}}" data-ez-hireling-field="status">
+                      <option value="{{status}}" selected>{{status}}</option>
+                      <option value="Available">Available</option>
+                      <option value="Hired">Hired</option>
+                      <option value="Busy">Busy</option>
+                      <option value="Unavailable">Unavailable</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Terms</span>
+                    <input type="text" value="{{terms}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="terms" placeholder="2s/day, favour owed">
+                  </label>
+
+                  <label>
+                    <span>Template</span>
+                    <input type="text" value="{{template}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="template" placeholder="Template or modifier">
+                  </label>
+
+                  <label>
+                    <span>Physical Quirk</span>
+                    <input type="text" value="{{physicalQuirk}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="physicalQuirk" placeholder="Scarred, limp, missing finger">
+                  </label>
+
+                  <label>
+                    <span>Work Ethic</span>
+                    <input type="text" value="{{workEthic}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="workEthic" placeholder="Reliable, lazy, opportunist">
+                  </label>
+
+                  <label>
+                    <span>Personality</span>
+                    <input type="text" value="{{personalityQuirk}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="personalityQuirk" placeholder="Suspicious, cheerful, pious">
+                  </label>
+
+                  <label>
+                    <span>Endeavours</span>
+                    <input type="text" value="{{endeavours}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="endeavours" placeholder="Gather information, trade, craft">
+                  </label>
+
+                  <label>
+                    <span>Requirements</span>
+                    <input type="text" value="{{requirements}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="requirements" placeholder="Trust, goods, introductions">
+                  </label>
+
+                  <label class="ez-hireling-fields__wide">
+                    <span>Liability / Notes</span>
+                    <input type="text" value="{{notes}}" data-ez-hireling-id="{{id}}" data-ez-hireling-field="notes" placeholder="Employer, favours, hooks">
+                  </label>
+                </div>
+              </article>
             {{/each}}
-          {{else}}
-            <tr>
-              <td colspan="4" style="padding: 0.5rem;">No henchmen added yet.</td>
-            </tr>
-          {{/if}}
-        </tbody>
-      </table>
+          </div>
+        {{else}}
+          <div class="ez-followers-empty">Drop NPC actors here.</div>
+        {{/if}}
+      </div>
     </section>
   </div>
 </section>
