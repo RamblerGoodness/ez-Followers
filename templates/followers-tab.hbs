@@ -8,43 +8,37 @@
     <section class="ez-followers-panel">
       <header class="ez-followers-panel__header">
         <h3>Henchmen</h3>
-        <span>Max {{fellowshipBonus}}</span>
+        <span class="ez-followers-limit">Max {{fellowshipBonus}}</span>
       </header>
 
       <div class="ez-followers-drop-zone" data-ez-drop-category="henchman">
-        <table class="ez-followers-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th class="ez-followers-table__actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#if followerTables.henchmen.length}}
-              {{#each followerTables.henchmen}}
-                <tr class="{{#if missing}}ez-followers-missing{{/if}}">
-                  <td>
-                    <div class="ez-followers-actor">
-                      <img src="{{img}}" alt="">
+        {{#if followerTables.henchmen.length}}
+          <div class="ez-henchman-list">
+            {{#each followerTables.henchmen}}
+              <article class="ez-henchman-card {{#if missing}}ez-followers-missing{{/if}}">
+                <img src="{{img}}" alt="">
+                <div class="ez-henchman-card__body">
+                  <h4>
+                    {{#if canOpen}}
+                      <button type="button" class="ez-followers-open" data-ez-open-follower="{{uuid}}" title="Open Sheet">{{name}}</button>
+                    {{else}}
                       <span>{{name}}</span>
-                    </div>
-                  </td>
-                  <td>{{actorType}}</td>
-                  <td class="ez-followers-table__actions">
-                    <button type="button" data-ez-remove-follower="{{id}}" title="Remove">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
-              {{/each}}
-            {{else}}
-              <tr>
-                <td colspan="3" class="ez-followers-empty">Drop character actors here.</td>
-              </tr>
-            {{/if}}
-          </tbody>
-        </table>
+                    {{/if}}
+                  </h4>
+                  <span class="ez-henchman-card__type">{{actorType}}</span>
+                </div>
+                <button type="button" data-ez-remove-follower="{{id}}" title="Remove">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </article>
+            {{/each}}
+          </div>
+        {{else}}
+          <div class="ez-followers-empty">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Drop character actors here.</span>
+          </div>
+        {{/if}}
       </div>
     </section>
 
@@ -61,7 +55,11 @@
                 <header class="ez-hireling-card__header">
                   <div class="ez-followers-actor">
                     <img src="{{img}}" alt="">
-                    <span>{{name}}</span>
+                    {{#if canOpen}}
+                      <button type="button" class="ez-followers-open" data-ez-open-follower="{{uuid}}" title="Open Sheet">{{name}}</button>
+                    {{else}}
+                      <span>{{name}}</span>
+                    {{/if}}
                   </div>
                   <button type="button" data-ez-remove-follower="{{id}}" title="Remove">
                     <i class="fa-solid fa-trash"></i>
@@ -174,7 +172,10 @@
             {{/each}}
           </div>
         {{else}}
-          <div class="ez-followers-empty">Drop NPC actors here.</div>
+          <div class="ez-followers-empty">
+            <i class="fa-solid fa-briefcase"></i>
+            <span>Drop NPC actors here.</span>
+          </div>
         {{/if}}
       </div>
     </section>

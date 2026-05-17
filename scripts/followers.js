@@ -226,6 +226,10 @@ function activateFollowerTab(app) {
     button.addEventListener("click", event => onRemoveFollower(event, app));
   });
 
+  tab.querySelectorAll("[data-ez-open-follower]").forEach(button => {
+    button.addEventListener("click", onOpenFollowerSheet);
+  });
+
   tab.querySelectorAll("[data-ez-hireling-field]").forEach(input => {
     input.addEventListener("change", event => onHirelingFieldChange(event, app));
   });
@@ -255,6 +259,11 @@ function registerFollowerActionListeners() {
   document.addEventListener("click", event => {
     if (!event.target?.closest?.("[data-ez-remove-follower]")) return;
     onRemoveFollower(event, null);
+  }, { capture: true });
+
+  document.addEventListener("click", event => {
+    if (!event.target?.closest?.("[data-ez-open-follower]")) return;
+    onOpenFollowerSheet(event);
   }, { capture: true });
 
   document.addEventListener("change", event => {
@@ -389,6 +398,26 @@ async function onRemoveFollower(event, app) {
   renderLeaderSheet(app, actor);
 }
 
+async function onOpenFollowerSheet(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+
+  const button = event.currentTarget?.closest?.("[data-ez-open-follower]")
+    ?? event.target?.closest?.("[data-ez-open-follower]");
+  const actor = button?.dataset?.ezOpenFollower ? await fromUuid(button.dataset.ezOpenFollower) : null;
+  if (!actor || actor.documentName !== "Actor") return;
+
+  if (!canOpenActor(actor)) {
+    return ui.notifications.warn(`You do not own ${actor.name}.`);
+  }
+
+  const sheet = actor.sheet;
+  if (typeof sheet?.render === "function") {
+    sheet.render(true);
+  }
+}
+
 async function onHirelingFieldChange(event, app) {
   event.stopPropagation();
 
@@ -429,13 +458,13 @@ async function actorFromDropEvent(event) {
 }
 
 async function actorFromDropData(data) {
-  if (typeof globalThis.Actor?.implementation?.fromDropData === "function") {
-    return globalThis.Actor.implementation.fromDropData(data);
-  }
-
   const actorClass = CONFIG?.Actor?.documentClass ?? globalThis.Actor;
   if (typeof actorClass?.fromDropData === "function") {
     return actorClass.fromDropData(data);
+  }
+
+  if (typeof globalThis.Actor?.implementation?.fromDropData === "function") {
+    return globalThis.Actor.implementation.fromDropData(data);
   }
 
   if (typeof globalThis.Actor?.fromDropData === "function") {
@@ -446,19 +475,16 @@ async function actorFromDropData(data) {
 }
 
 function getDropData(event) {
-  if (typeof globalThis.TextEditor?.getDragEventData === "function") {
-    const data = globalThis.TextEditor.getDragEventData(event);
-    if (data) return data;
-  }
+  const textEditor = globalThis.foundry?.applications?.ux?.TextEditor?.implementation
+    ?? globalThis.TextEditor;
 
-  const textEditor = globalThis.foundry?.applications?.ux?.TextEditor?.implementation;
   if (typeof textEditor?.getDragEventData === "function") {
     const data = textEditor.getDragEventData(event);
     if (data) return data;
   }
 
-  const raw = event.dataTransfer?.getData("text/plain")
-    || event.dataTransfer?.getData("application/json");
+  const raw = event.dataTransfer?.getData("application/json")
+    || event.dataTransfer?.getData("text/plain");
   if (!raw) return null;
 
   try {
@@ -598,6 +624,7 @@ async function resolveFollowerRow(follower) {
     name: actor?.name ?? follower?.name ?? "Missing Actor",
     img: actor?.img ?? follower?.img ?? "icons/svg/mystery-man.svg",
     actorType: actor?.type ?? follower?.actorType ?? "",
+    canOpen: canOpenActor(actor),
     missing: !actor
   };
 
@@ -633,6 +660,16 @@ function getFellowshipBonus(actor) {
     ?? actor?.system?.characteristics?.fel?.bonus
     ?? 0
   ) || 0;
+}
+
+function canOpenActor(actor) {
+  if (!actor || actor.documentName !== "Actor" || !game.user) return false;
+
+  if (typeof actor.testUserPermission === "function") {
+    return actor.testUserPermission(game.user, "OWNER");
+  }
+
+  return actor.isOwner === true;
 }
 
 function registerExperiencePropagation() {
@@ -681,11 +718,11 @@ async function awardHenchmanExperience(leader, leaderXpDelta, reason, messageId)
       continue;
     }
 
-    awardExperienceToHenchman(henchman, amount, reason, messageId);
+    await awardExperienceToHenchman(henchman, amount, reason, messageId);
   }
 }
 
-function awardExperienceToHenchman(actor, amount, reason, messageId) {
+async function awardExperienceToHenchman(actor, amount, reason, messageId) {
   if (typeof actor.system?.awardExp !== "function") {
     warn(`Skipping XP award for ${actor.name}; WFRP4e awardExp API not found.`);
     return;
@@ -693,6 +730,14 @@ function awardExperienceToHenchman(actor, amount, reason, messageId) {
 
   const suppressionKey = getXpSuppressionKey(actor, messageId);
   xpPropagationSuppressedActors.add(suppressionKey);
-  setTimeout(() => xpPropagationSuppressedActors.delete(suppressionKey), 5000);
-  actor.system.awardExp(amount, reason, messageId, true);
+  const timeoutId = setTimeout(() => xpPropagationSuppressedActors.delete(suppressionKey), 5000);
+
+  try {
+    await actor.system.awardExp(amount, reason, messageId, true);
+    ui.notifications.info(`${actor.name} gained ${amount} XP as a henchman.`);
+  } catch (err) {
+    xpPropagationSuppressedActors.delete(suppressionKey);
+    clearTimeout(timeoutId);
+    throw err;
+  }
 }
