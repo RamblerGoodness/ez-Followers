@@ -1,5 +1,7 @@
 # EZ-Followers WFRP4e
 
+Version: 1.0.5
+
 A Foundry VTT module that adds a **Followers** tab to WFRP4e character sheets.
 
 ## Installation
