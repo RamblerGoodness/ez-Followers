@@ -1,6 +1,6 @@
 {
-  "id": "ez-followers",
-  "title": "EZ-Followers",
+  "id": "ez-followers-wrfp4e",
+  "title": "EZ-Followers WFRP4e",
   "version": "1.0.4",
   "compatibility": {
     "minimum": "13",
@@ -9,9 +9,7 @@
 
   "authors": [
     {
-      "name": "Rambler",
-      "discord": "Rambler",
-      "flags": {}
+      "name": "Rambler"
     }
   ],
 
@@ -23,35 +21,44 @@
     "styles/followers.css"
   ],
 
-  "url": "https://github.com/RamblerGoodness/ez-Followers/tree/main",
-  "manifest": "https://raw.githubusercontent.com/RamblerGoodness/ez-Followers/main/module.json",
-  "download": "https://github.com/RamblerGoodness/ez-Followers/archive/refs/heads/main.zip",
-  
-  "flags": {
-    "canUpload": true
-  },
+  "url": "https://github.com/RamblerGoodness/ez-followers-wrfp4e/tree/main",
+  "manifest": "https://raw.githubusercontent.com/RamblerGoodness/ez-followers-wrfp4e/main/module.json",
+  "download": "https://github.com/RamblerGoodness/ez-followers-wrfp4e/archive/refs/heads/main.zip",
   
   "packs": [
     {
       "name": "rules",
       "label": "EZ-Followers Rules",
-      "path": "packs/rules.db",
+      "path": "packs/rules",
       "type": "JournalEntry",
       "system": "wfrp4e",
-      "private": true,
-      "flags": {}
+      "private": true
     }
   ],
 
   "relationships": {
+    "systems": [
+      {
+        "id": "wfrp4e",
+        "type": "system",
+        "compatibility": {}
+      }
+    ],
     "requires": [
       {
         "id": "wfrp4e-core",
         "type": "module",
         "compatibility": {}
       }
+    ],
+    "recommends": [
+      {
+        "id": "wfrp4e-up-in-arms",
+        "type": "module",
+        "compatibility": {}
+      }
     ]
   },
 
-  "description": "Adds a Followers tab to WFRP4e character sheets and includes a journal compendium with module notes and rules."
+  "description": "Adds a Followers tab to WFRP4e character sheets."
 }

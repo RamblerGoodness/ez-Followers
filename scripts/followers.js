@@ -1,10 +1,8 @@
-const MODULE_ID = "ez-followers";
-const SHEET_CLASS_NAME = "ActorSheetWFRP4eCharacter";
+const MODULE_ID = "ez-followers-wrfp4e";
 const TAB_ID = "followers";
 const TAB_GROUP = "primary";
 const DEFAULT_ACTIVE_TAB = "main";
 const FOLLOWERS_FLAG = "followers";
-const FOLLOWERS_SETTING = "followers";
 const UP_IN_ARMS_ITEM_PACK = "wfrp4e-up-in-arms.items";
 const HIRELING_ITEM_NAME = "Hireling";
 const HENCHMAN = "henchman";
@@ -24,30 +22,16 @@ const HIRELING_FIELDS = new Set([
   "status",
   "notes"
 ]);
-const XP_PROPAGATION_OPTION = "ezFollowersSkipXpPropagation";
+const xpPropagationSuppressedActors = new Set();
 
 Hooks.once("ready", () => {
   registerFollowerTabFeatures();
 });
 
 function registerFollowerTabFeatures() {
-  registerSettings();
   registerFollowerDropListeners();
   registerFollowerActionListeners();
   registerExperiencePropagation();
-}
-
-function registerSettings() {
-  game.settings.register(MODULE_ID, FOLLOWERS_SETTING, {
-    scope: "world",
-    config: false,
-    type: Object,
-    default: {}
-  });
-}
-
-function log(...args) {
-  console.log(`${MODULE_ID} |`, ...args);
 }
 
 function warn(...args) {
@@ -64,15 +48,13 @@ Hooks.on("renderApplicationV2", (app) => {
     if (!actor) return;
     if (actor.documentName !== "Actor") return;
     if (actor.type !== "character") return;
-    if (app?.constructor?.name !== SHEET_CLASS_NAME) return;
-
-    const Sheet = app.constructor;
+    const Sheet = getWfrp4eCharacterSheetClass();
     if (!Sheet) return;
+    if (!(app instanceof Sheet)) return;
 
     if (!Sheet._ezFollowersPatched) {
       patchSheetClass(Sheet);
       Sheet._ezFollowersPatched = true;
-      log("Patched sheet class", Sheet.name ?? SHEET_CLASS_NAME);
 
       if (!app._ezFollowersRerendered) {
         app._ezFollowersRerendered = true;
@@ -94,6 +76,10 @@ function patchSheetClass(Sheet) {
   patchPrepareTabs(Sheet);
   patchPrepareContext(Sheet);
   patchPreparePartContext(Sheet);
+}
+
+function getWfrp4eCharacterSheetClass() {
+  return game.wfrp4e?.apps?.ActorSheetWFRP4eCharacter ?? null;
 }
 
 function patchTabs(Sheet) {
@@ -124,14 +110,10 @@ function patchTabs(Sheet) {
       }
     ];
     changed = true;
-    log(`Added ${TAB_ID} to nested tab group`, key);
   }
 
   if (changed) {
     Sheet.TABS = tabs;
-    log("TABS patched");
-  } else {
-    log("TABS already contained followers");
   }
 }
 
@@ -139,7 +121,6 @@ function patchParts(Sheet) {
   const parts = foundry.utils.deepClone(Sheet.PARTS ?? {});
 
   if (parts[TAB_ID]) {
-    log("PARTS already contained followers");
     return;
   }
 
@@ -148,14 +129,12 @@ function patchParts(Sheet) {
   };
 
   Sheet.PARTS = parts;
-  log("PARTS patched");
 }
 
 function patchTabGroups(Sheet) {
   const current = Sheet.prototype.tabGroups ?? {};
 
   if (current[TAB_GROUP] != null) {
-    log("tabGroups already defines primary");
     return;
   }
 
@@ -163,8 +142,6 @@ function patchTabGroups(Sheet) {
     ...current,
     [TAB_GROUP]: DEFAULT_ACTIVE_TAB
   };
-
-  log("tabGroups patched");
 }
 
 function patchPrepareTabs(Sheet) {
@@ -183,7 +160,6 @@ function patchPrepareTabs(Sheet) {
   };
 
   Sheet.prototype._ezFollowersPrepareTabsPatched = true;
-  log("_prepareTabs patched");
 }
 
 function hasFollowers(actor) {
@@ -204,7 +180,6 @@ function patchPrepareContext(Sheet) {
   };
 
   Sheet.prototype._ezFollowersPrepareContextPatched = true;
-  log("_prepareContext patched");
 }
 
 function patchPreparePartContext(Sheet) {
@@ -234,7 +209,6 @@ function patchPreparePartContext(Sheet) {
   };
 
   Sheet.prototype._ezFollowersPreparePartContextPatched = true;
-  log("_preparePartContext patched");
 }
 
 function activateFollowerTab(app) {
@@ -455,6 +429,10 @@ async function actorFromDropEvent(event) {
 }
 
 async function actorFromDropData(data) {
+  if (typeof globalThis.Actor?.implementation?.fromDropData === "function") {
+    return globalThis.Actor.implementation.fromDropData(data);
+  }
+
   const actorClass = CONFIG?.Actor?.documentClass ?? globalThis.Actor;
   if (typeof actorClass?.fromDropData === "function") {
     return actorClass.fromDropData(data);
@@ -464,14 +442,15 @@ async function actorFromDropData(data) {
     return globalThis.Actor.fromDropData(data);
   }
 
-  if (typeof globalThis.Actor?.implementation?.fromDropData === "function") {
-    return globalThis.Actor.implementation.fromDropData(data);
-  }
-
   return null;
 }
 
 function getDropData(event) {
+  if (typeof globalThis.TextEditor?.getDragEventData === "function") {
+    const data = globalThis.TextEditor.getDragEventData(event);
+    if (data) return data;
+  }
+
   const textEditor = globalThis.foundry?.applications?.ux?.TextEditor?.implementation;
   if (typeof textEditor?.getDragEventData === "function") {
     const data = textEditor.getDragEventData(event);
@@ -599,24 +578,12 @@ function createFollowerRow(actor, category) {
 }
 
 function getStoredFollowers(actor) {
-  const settingFollowers = getStoredFollowersByActorUuid(actor?.uuid);
-  if (settingFollowers) return foundry.utils.deepClone(settingFollowers);
-
   const followers = actor?.getFlag(MODULE_ID, FOLLOWERS_FLAG);
   return Array.isArray(followers) ? foundry.utils.deepClone(followers) : [];
 }
 
-function getStoredFollowersByActorUuid(uuid) {
-  if (!uuid) return null;
-  const allFollowers = game.settings.get(MODULE_ID, FOLLOWERS_SETTING) ?? {};
-  const followers = allFollowers[uuid];
-  return Array.isArray(followers) ? followers : null;
-}
-
 async function setStoredFollowers(actor, followers) {
-  const allFollowers = foundry.utils.deepClone(game.settings.get(MODULE_ID, FOLLOWERS_SETTING) ?? {});
-  allFollowers[actor.uuid] = followers;
-  await game.settings.set(MODULE_ID, FOLLOWERS_SETTING, allFollowers);
+  await actor.setFlag(MODULE_ID, FOLLOWERS_FLAG, followers);
 }
 
 async function getFollowerRows(actor) {
@@ -669,37 +636,40 @@ function getFellowshipBonus(actor) {
 }
 
 function registerExperiencePropagation() {
-  Hooks.on("preUpdateActor", (actor, changed, options) => {
-    if (options?.[XP_PROPAGATION_OPTION]) return;
-    if (actor?.type !== "character") return;
-
-    const newTotal = foundry.utils.getProperty(changed, "system.details.experience.total");
-    if (!Number.isNumeric(newTotal)) return;
-
-    const oldTotal = Number(actor?.system?.details?.experience?.total) || 0;
-    const delta = Number(newTotal) - oldTotal;
-    if (delta <= 0) return;
-
-    options.ezFollowersXpDelta = delta;
-  });
-
   Hooks.on("updateActor", async (actor, _changed, options) => {
-    if (options?.[XP_PROPAGATION_OPTION]) return;
-    const delta = Number(options?.ezFollowersXpDelta) || 0;
-    if (delta <= 0) return;
+    const suppressionKey = getXpSuppressionKey(actor, options?.fromMessage);
+    if (xpPropagationSuppressedActors.has(suppressionKey)) {
+      xpPropagationSuppressedActors.delete(suppressionKey);
+      return;
+    }
+    if (actor?.type !== "character") return;
+    if (!options?.fromMessage) return;
 
-    await awardHenchmanExperience(actor, delta);
+    const message = game.messages?.get?.(options.fromMessage);
+    if (!isExperienceMessage(message)) return;
+
+    const amount = Number(message.system?.amount) || 0;
+    if (amount <= 0) return;
+
+    await awardHenchmanExperience(actor, amount, message.system?.reason ?? "", options.fromMessage);
   });
 }
 
-async function awardHenchmanExperience(leader, leaderXpDelta) {
+function isExperienceMessage(message) {
+  return message?.type === "xp";
+}
+
+function getXpSuppressionKey(actor, messageId) {
+  return `${actor?.uuid ?? ""}::${messageId ?? ""}`;
+}
+
+async function awardHenchmanExperience(leader, leaderXpDelta, reason, messageId) {
   const amount = Math.floor(leaderXpDelta / 2);
   if (amount <= 0) return;
 
   const followers = getStoredFollowers(leader).filter(follower => follower?.category === HENCHMAN);
   if (!followers.length) return;
 
-  const reason = `Henchman share from ${leader.name}`;
   for (const follower of followers) {
     const henchman = follower?.uuid ? await fromUuid(follower.uuid) : null;
     if (!henchman) {
@@ -711,22 +681,18 @@ async function awardHenchmanExperience(leader, leaderXpDelta) {
       continue;
     }
 
-    await awardExperienceToHenchman(henchman, amount, reason);
+    awardExperienceToHenchman(henchman, amount, reason, messageId);
   }
 }
 
-async function awardExperienceToHenchman(actor, amount, reason) {
-  const options = { [XP_PROPAGATION_OPTION]: true };
-  const experience = foundry.utils.deepClone(actor.system?.details?.experience ?? {});
-  experience.total = (Number(experience.total) || 0) + amount;
-  experience.spent = Number(experience.spent) || 0;
-  experience.log = Array.isArray(experience.log) ? experience.log : [];
-  experience.log.push({
-    reason,
-    amount,
-    spent: experience.spent,
-    total: experience.total,
-    type: "total"
-  });
-  return actor.update({ "system.details.experience": experience }, options);
+function awardExperienceToHenchman(actor, amount, reason, messageId) {
+  if (typeof actor.system?.awardExp !== "function") {
+    warn(`Skipping XP award for ${actor.name}; WFRP4e awardExp API not found.`);
+    return;
+  }
+
+  const suppressionKey = getXpSuppressionKey(actor, messageId);
+  xpPropagationSuppressedActors.add(suppressionKey);
+  setTimeout(() => xpPropagationSuppressedActors.delete(suppressionKey), 5000);
+  actor.system.awardExp(amount, reason, messageId, true);
 }

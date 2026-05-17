@@ -7,12 +7,11 @@
       "type": "text",
       "sort": 0,
       "text": {
-        "content": "<h1>Follower Rules</h1><p>In WFRP4e, hirelings and henchmen are NPCs employed by adventurers for support between and during adventures. This module treats the Followers tab as a lightweight management sheet for that support structure.</p><h2>Hirelings</h2><ul><li>Hirelings are temporary, task-specific, or group-based support NPCs.</li><li>Examples include guards, porters, servants, mercenaries, and specialists hired for a job.</li><li>Hirelings have no hard cap in this module, but they are still expected to be affordable and manageable in play.</li></ul><h2>Henchmen</h2><ul><li>Henchmen are more personal long-term retainers or companions.</li><li>They should usually be tracked individually rather than as a group.</li><li>Default henchman limit equals the owning character's Fellowship Bonus.</li><li>That limit can be overridden on the Followers tab when needed.</li></ul><h2>V1 Tracking</h2><ul><li>Followers tab currently supports drag-and-drop actor assignment into Hirelings and Henchmen tables.</li><li>Hirelings may contain any number of actor entries.</li><li>Henchmen may contain actor entries up to current limit.</li><li>Wage is tracked as free text in v1.</li><li>Loyalty is tracked as a simple rating in v1.</li></ul><h2>Scope</h2><ul><li>The module records recruitment and management details for followers.</li><li>It is intended to support pay, assignment, and between-adventure bookkeeping first.</li><li>Advanced mechanics such as combat automation, encumbrance handling, injury rules, morale testing, and advancement are outside current v1 scope.</li></ul><h2>Design Direction</h2><p>Goal is to keep follower management fast, readable, and easy to maintain directly from owning character sheet.</p>",
+        "content": "<h1>Follower Rules</h1><h2>Hirelings</h2><ul><li>Drop NPC actors into Hirelings.</li><li>Hirelings have no module-enforced cap.</li><li>Use the hireling fields for contract, reliability, status, terms, and notes.</li></ul><h2>Henchmen</h2><ul><li>Drop character actors into Henchmen.</li><li>Maximum henchmen equals the leader's Fellowship Bonus.</li><li>When the leader accepts an XP reward, each henchman gains half that reward, rounded down, for the same reason.</li></ul>",
         "format": 1
       }
     }
   ],
-  "flags": {},
   "folder": null,
   "ownership": {
     "default": 0

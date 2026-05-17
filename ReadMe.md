@@ -1,12 +1,13 @@
-# EZ Followers: WFRP4e
+# EZ-Followers WFRP4e
 
-A small Foundry VTT module that adds a **Followers** tab to WFRP4e character sheets.
+A Foundry VTT module that adds a **Followers** tab to WFRP4e character sheets.
 
-## Installation (Foundry VTT)
-Use this manifest URL in **Add-on Modules → Install Module → Manifest URL**:
+## Installation
+Manifest URL:
 
-`https://raw.githubusercontent.com/RamblerGoodness/ez-followers/main/module.json`
+`https://raw.githubusercontent.com/RamblerGoodness/ez-followers-wrfp4e/main/module.json`
 
-## Development Notes
-- Supports Foundry VTT v13.
+## Requirements
+- Supports Foundry VTT v13 and v14.
 - Requires the `wfrp4e-core` module.
+- Recommends the `wfrp4e-up-in-arms` module for Hireling item automation.
